@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+    
+</head>
+<body>
+    <canvas id="candlestickChart" width="900" height="400"></canvas>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var rawData = {{ data | safe }};
+            console.log("Raw Data:", rawData);
+
+            var canvas = document.getElementById("lineChart");
+            var ctx = canvas.getContext("2d");
+
+            var dateList = rawData.map(function (item) {
+                return item.datetime;
+            });
+            var openList = rawData.map(function (item) {
+                return item.open;
+            });
+            var highList = rawData.map(function (item) {
+                return item.high;
+            });
+            var lowList = rawData.map(function (item) {
+                return item.low;
+            });
+            var closeList = rawData.map(function (item) {
+                return item.close;
+            });
+
+            // Reverse the arrays
+            dateList.reverse();
+            openList.reverse();
+            highList.reverse();
+            lowList.reverse();
+            closeList.reverse();
+
+            var ctx = document.getElementById('candlestickChart').getContext('2d');
+            var candlestickData = {{ candlestick_data | tojson | safe }};
+            var candlestickChart = new Chart(ctx, {
+                type: 'candlestick',
+                data: {
+                    datasets: [{
+                        label: 'Candlestick Chart',
+                        data: candlestickData,
+                    }]
+                }
+            });
+        });
+    </script>
+</body>
+</html>
